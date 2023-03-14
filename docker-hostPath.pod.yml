@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: docker-volume
+spec:
+  containers:
+  - name: docker
+    image: docker
+    command: ["sleep"]
+    args: ["100000"] # this just sleeps and keeps it running
+    volumeMounts:
+      - name: docker-socket
+        mountPath: /var/run/docker.socket # from the docker container when invoke a command, it actually goes via this path, which ultimately talks the the path below (on the host)
+    resources:
+  volumes: 
+    - name: docker-socket
+      hostPath:
+        path: /var/run/docker.sock # this points to where the docker daemon is accessible
+        type: Socket # here we want a socket connection to the daemon

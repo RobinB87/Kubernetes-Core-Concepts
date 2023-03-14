@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-nginx
+  labels:
+    app: my-nginx
+spec:
+  replicas: 2
+  selector: # match labels called app=my-nginx (label in the template, not referring to the app=my-nginx above, that is for the deployment itself)
+    matchLabels:
+      app: my-nginx
+  template: # template for pod creation; could be in a separate file
+      metadata:
+        labels:
+          app: my-nginx # this template will tie the deployment to this template
+      spec: # this is the pod template
+        containers:
+        - name: my-nginx
+          image: nginx:alpine
+          ports:
+          - containerPort: 80
+          resources: # allows you to constrain what a container is allowed to run in a pod
+            limits:
+              memory: "128Mi" # 128MB
+              cpu: "200m" # 200 millicp (.2 cpu or 20% of the cpu)
